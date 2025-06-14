@@ -1,75 +1,171 @@
 <!DOCTYPE html>
-
 <html lang="pt">
-
 <head>
+    <meta charset="UTF-8">
+    <title>Gerador de Link IPTV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 12px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 400px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output-container {
+            margin-top: 25px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            word-break: break-all;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        #output {
+            width: 100%;
+            padding-bottom: 10px;
+            **user-select: text; /* Torna o texto selecionável */**
+            **-webkit-user-select: text;**
+            **-moz-user-select: text;**
+            **-ms-user-select: text;**
+            **cursor: text; /* Altera o cursor para indicar que o texto é selecionável */**
+            text-align: center;
+            color: #333;
+            min-height: 20px;
+        }
+        #copyButton {
+            background: #007bff;
+            padding: 10px 20px;
+            width: auto;
+            margin-top: 15px;
+            border-radius: 4px;
+            **display: none; /* Inicialmente oculto */**
+        }
+        #copyButton:hover {
+            background: #0056b3;
+        }
 
-    <meta charset="UTF-8">
+        /* Estilo para o tooltip de confirmação */
+        .tooltip {
+            visibility: hidden;
+            width: 100px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
 
-    <title>Gerador de Link IPTV</title>
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        .tooltip.show {
+            visibility: visible;
+            opacity: 1;
+        }
 
-    <style>
-
-        body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
-
-        input, button { padding: 10px; margin: 5px 0; width: 100%; font-size: 16px; }
-
-        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
-
-        .output { margin-top: 20px; background: white; padding: 10px; border-radius: 5px; word-break: break-all; }
-
-    </style>
-
+    </style>
 </head>
-
 <body>
+    <h2>Gerador de Link IPTV</h2>
+    <input type="text" id="url" placeholder="URL com http:// e porta" />
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="gerarLink()">Gerar Link</button>
 
-    <h2>Gerador de Link IPTV</h2>
+    <div class="output-container">
+        <div id="output"></div>
+        <button id="copyButton" onclick="copyLink()">Copiar Link</button>
+        <span class="tooltip" id="copyTooltip">Copiado!</span>
+    </div>
 
-    <input type="text" id="url" placeholder="URL com http:// e porta" />
+    <script>
+        function gerarLink() {
+            const url = document.getElementById("url").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const outputDiv = document.getElementById("output");
+            const copyButton = document.getElementById("copyButton");
 
-    <input type="text" id="username" placeholder="Username" />
+            if (!url || !username || !password) {
+                outputDiv.innerText = "Por favor, preencha todos os campos.";
+                copyButton.style.display = 'none'; // Oculta o botão se os campos estiverem vazios
+                return;
+            }
 
-    <input type="password" id="password" placeholder="Password" />
+            const link = `${url}/get.php?username=${username}&password=${password}&type=m3u_plus`;
+            **outputDiv.innerText = link; // APENAS O LINK, SEM TEXTO ADICIONAL**
+            copyButton.style.display = 'block'; // Mostra o botão quando o link é gerado
+        }
 
-    <button onclick="gerarLink()">Gerar Link</button>
+        async function copyLink() {
+            const outputDiv = document.getElementById("output");
+            const linkToCopy = outputDiv.innerText;
+            const tooltip = document.getElementById("copyTooltip");
 
-    <div class="output" id="output"></div>
+            if (!linkToCopy) {
+                alert("Nenhum link para copiar. Gere um link primeiro.");
+                return;
+            }
 
+            try {
+                await navigator.clipboard.writeText(linkToCopy);
+                
+                tooltip.classList.add("show");
+                setTimeout(() => {
+                    tooltip.classList.remove("show");
+                }, 2000); // Oculta o tooltip após 2 segundos
 
-
-    <script>
-
-        function gerarLink() {
-
-            const url = document.getElementById("url").value.trim();
-
-            const username = document.getElementById("username").value.trim();
-
-            const password = document.getElementById("password").value.trim();
-
-
-
-            if (!url || !username || !password) {
-
-                document.getElementById("output").innerText = "Por favor preencha todos os campos.";
-
-                return;
-
-            }
-
-
-
-            const link = `${url}/get.php?username=${username}&password=${password}&type=m3u_plus`;
-
-            document.getElementById("output").innerText = `LINK GERADO:\n${link}`;
-
-        }
-
-    </script>
-
+            } catch (err) {
+                console.error('Falha ao copiar o link:', err);
+                alert('Erro ao copiar o link. Por favor, copie manualmente: ' + linkToCopy);
+            }
+        }
+    </script>
 </body>
-
 </html>
