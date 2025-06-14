@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerador de Link IPTV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
+        input, button { padding: 10px; margin: 5px 0; width: 100%; font-size: 16px; }
+        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .output { margin-top: 20px; background: white; padding: 10px; border-radius: 5px; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h2>Gerador de Link IPTV</h2>
+    <input type="text" id="url" placeholder="URL com http:// e porta" />
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="gerarLink()">Gerar Link</button>
+    <div class="output" id="output"></div>
+
+    <script>
+        function gerarLink() {
+            const url = document.getElementById("url").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (!url || !username || !password) {
+                document.getElementById("output").innerText = "Por favor preencha todos os campos.";
+                return;
+            }
+
+            const link = `${url}/get.php?username=${username}&password=${password}&type=m3u_plus&output=hls`;
+            document.getElementById("output").innerText = `LINK GERADO:\n${link}`;
+        }
+    </script>
+</body>
+</html>
