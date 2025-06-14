@@ -21,11 +21,11 @@
             padding: 12px;
             margin: 8px 0;
             width: 100%;
-            max-width: 400px;
+            max-width: 400px; /* Limita a largura dos inputs e botões */
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura */
         }
         button {
             background: #4CAF50;
@@ -54,22 +54,22 @@
         #output {
             width: 100%;
             padding-bottom: 10px;
-            **user-select: text; /* Torna o texto selecionável */**
-            **-webkit-user-select: text;**
-            **-moz-user-select: text;**
-            **-ms-user-select: text;**
-            **cursor: text; /* Altera o cursor para indicar que o texto é selecionável */**
+            user-select: text; /* Torna o texto selecionável */
+            -webkit-user-select: text; /* Para compatibilidade com navegadores WebKit (Safari, Chrome) */
+            -moz-user-select: text; /* Para compatibilidade com Firefox */
+            -ms-user-select: text; /* Para compatibilidade com IE/Edge */
+            cursor: text; /* Altera o cursor para indicar que o texto é selecionável */
             text-align: center;
             color: #333;
-            min-height: 20px;
+            min-height: 20px; /* Garante um espaço mínimo */
         }
         #copyButton {
-            background: #007bff;
+            background: #007bff; /* Cor azul para o botão de copiar */
             padding: 10px 20px;
-            width: auto;
+            width: auto; /* Permite que o botão se ajuste ao conteúdo */
             margin-top: 15px;
             border-radius: 4px;
-            **display: none; /* Inicialmente oculto */**
+            display: none; /* Inicialmente oculto */
         }
         #copyButton:hover {
             background: #0056b3;
@@ -86,7 +86,7 @@
             padding: 5px 0;
             position: absolute;
             z-index: 1;
-            bottom: calc(100% + 10px);
+            bottom: calc(100% + 10px); /* Posiciona acima do botão */
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
@@ -139,7 +139,7 @@
             }
 
             const link = `${url}/get.php?username=${username}&password=${password}&type=m3u_plus`;
-            **outputDiv.innerText = link; // APENAS O LINK, SEM TEXTO ADICIONAL**
+            outputDiv.innerText = link; // Apenas o link, sem "LINK GERADO:"
             copyButton.style.display = 'block'; // Mostra o botão quando o link é gerado
         }
 
@@ -148,20 +148,24 @@
             const linkToCopy = outputDiv.innerText;
             const tooltip = document.getElementById("copyTooltip");
 
+            // Verifica se o outputDiv tem texto para copiar
             if (!linkToCopy) {
                 alert("Nenhum link para copiar. Gere um link primeiro.");
                 return;
             }
 
             try {
+                // Tenta copiar o texto para a área de transferência
                 await navigator.clipboard.writeText(linkToCopy);
                 
+                // Mostra o tooltip de confirmação
                 tooltip.classList.add("show");
                 setTimeout(() => {
                     tooltip.classList.remove("show");
                 }, 2000); // Oculta o tooltip após 2 segundos
 
             } catch (err) {
+                // Em caso de erro (ex: não HTTPS, permissão negada)
                 console.error('Falha ao copiar o link:', err);
                 alert('Erro ao copiar o link. Por favor, copie manualmente: ' + linkToCopy);
             }
